@@ -93,6 +93,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       body: JSON.stringify({ identifier, password }),
     });
 
+    console.log(res);
+
     if (!res.ok) {
       const err = await res.json().catch(() => ({ message: 'Invalid credentials' }));
       throw new Error(err.message || 'Login failed');

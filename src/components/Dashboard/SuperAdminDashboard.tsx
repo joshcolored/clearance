@@ -40,7 +40,7 @@ const clearanceTemplate = {
   ]
 };
 
-export const SuperAdminDashboard: React.FC = () => {
+const SuperAdminDashboard = () => {
   const { user } = useAuth();
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);

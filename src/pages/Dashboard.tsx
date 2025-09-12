@@ -2,7 +2,7 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { SuperAdminDashboard } from '@/components/Dashboard/SuperAdminDashboard';
-import { HRDashboard } from '@/components/Dashboard/HRDashboard';
+import HRDashboard from '@/components/Dashboard/HRDashboard';
 import { ITDashboard } from '@/components/Dashboard/ITDashboard';
 import { TeamLeaderDashboard } from '@/components/Dashboard/TeamLeaderDashboard';
 import { EngineeringDashboard } from '@/components/Dashboard/EngineeringDashboard';
@@ -12,9 +12,9 @@ import { OperationsManagerDashboard } from '@/components/Dashboard/OperationsMan
 import { EmployeeDashboard } from '@/components/Dashboard/EmployeeDashboard';
 
 const Dashboard: React.FC = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { user } = useAuth();
 
-  if (!isAuthenticated || !user) {
+  if (!user) {
     return <Navigate to="/" replace />;
   }
 

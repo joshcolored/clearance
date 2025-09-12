@@ -9,11 +9,10 @@ import { Label } from '@/components/ui/label';
 import { Building, CheckCircle, Clock, CreditCard, AlertTriangle } from 'lucide-react';
 import { ClearanceItem, Employee } from '@/types';
 import { useAuth } from '@/contexts/AuthContext';
-import { DashboardLayout } from '@/components/Layout/DashboardLayout';
 import { CustomPieChart } from '@/components/Charts/PieChart';
 import { CustomBarChart } from '@/components/Charts/BarChart';
 
-export const FacilitiesDashboard: React.FC = () => {
+const FacilitiesDashboard = () => {
   const { user } = useAuth();
   const [clearanceItems, setClearanceItems] = useState<ClearanceItem[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -116,7 +115,6 @@ export const FacilitiesDashboard: React.FC = () => {
   const totalEmployees = new Set(clearanceItems.map(item => item.employeeId)).size;
 
   return (
-    <DashboardLayout title="Admin/Facilities Dashboard">
       <div className="space-y-6">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -289,6 +287,6 @@ export const FacilitiesDashboard: React.FC = () => {
           </DialogContent>
         </Dialog>
       </div>
-    </DashboardLayout>
   );
 };
+export default FacilitiesDashboard;
