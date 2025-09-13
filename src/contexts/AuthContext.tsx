@@ -1,15 +1,13 @@
 // AuthContext.tsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
-import { json } from 'stream/consumers';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 type User = {
   id: number;
   name: string;
   username?: string | null;
   ntlogin?: string | null;
-  role: string;
+  role: number;
 };
 
 type AuthContextType = {
@@ -24,17 +22,29 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
-const roleToPath = (role: string) => {
+const roleToPath = (role: number) => {
+  // switch (role) {
+  //   case '9': return '/admin';
+  //   case 'hr': return '/hr';
+  //   case 'it': return '/it';
+  //   case 'team_leader': return '/team-leader';
+  //   case 'engineering_auxiliary': return '/engineering';
+  //   case 'admin_facilities': return '/facilities';
+  //   case 'account_coordinator': return '/account';
+  //   case 'operations_manager': return '/operations';
+  //   case 'employee': return '/employee';
+  //   default: return '/';
+  // }
   switch (role) {
-    case 'super_admin': return '/admin';
-    case 'hr': return '/hr';
-    case 'it': return '/it';
-    case 'team_leader': return '/team-leader';
-    case 'engineering_auxiliary': return '/engineering';
-    case 'admin_facilities': return '/facilities';
-    case 'account_coordinator': return '/account';
-    case 'operations_manager': return '/operations';
-    case 'employee': return '/employee';
+    case 1: return '/admin';
+    case 9: return '/hr';
+    case 2: return '/it';
+    case 3: return '/team-leader';
+    case 4: return '/engineering';
+    case 5: return '/facilities';
+    case 6: return '/account';
+    case 7: return '/operations';
+    case 8: return '/employee';
     default: return '/';
   }
 };
@@ -53,7 +63,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchUser = async (): Promise<User | null> => {
     try {
-      const res = await fetch(`${API_URL}/api/user`, {
+      const res = await fetch(`http://localhost:8000/api/user`, {
         credentials: 'include',
         headers: { 'Accept': 'application/json' },
       });
@@ -86,7 +96,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     // 2. login request
-    const res = await fetch(`${API_URL}/api/login`, {
+    const res = await fetch(`http://localhost:8000/api/login`, {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -100,6 +110,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const json = await res.json();
     const loggedUser: User = json.user;
+    console.log(json.user);
     setUser(loggedUser);
 
     // Redirect to role dashboard
