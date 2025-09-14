@@ -1,6 +1,6 @@
 // AuthContext.tsx
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 type User = {
   id: number;
@@ -22,25 +22,25 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
-const roleToPath = (role: number) => {
+const roleToPath = (role: string) => {
   switch (role) {
-    case 9:
+    case "super_admin":
       return "/admin";
-    case 1:
+    case "hr":
       return "/hr";
-    case 3:
+    case "it":
       return "/it";
-    case 4:
+    case "team_leader":
       return "/team-leader";
-    case 5:
+    case "engineering_auxiliary":
       return "/engineering";
-    case 6:
+    case "admin_facilities":
       return "/facilities";
-    case 7:
+    case "account_coordinator":
       return "/account";
-    case 8:
+    case "operations_manager":
       return "/operations";
-    case 2:
+    case "employee":
       return "/employee";
     default:
       return "/";
@@ -91,7 +91,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.setItem("loggedUser", JSON.stringify(loggedUser));
     return loggedUser;
   };
-
+  
   // Fetch current user on mount
   useEffect(() => {
     fetchUser().finally(() => setLoading(false));
