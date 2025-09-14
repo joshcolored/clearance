@@ -5,26 +5,35 @@ import { Progress } from '@/components/ui/progress';
 import { CheckCircle, Clock, User, Calendar, Building } from 'lucide-react';
 import { ClearanceItem, Employee } from '@/types';
 import { useAuth } from '@/contexts/AuthContext';
-import { DashboardLayout } from '@/components/Layout/DashboardLayout';
 
 interface DepartmentProgress {
   department: string;
   progress: number;
   completed: number;
   total: number;
+  employeeId?: string; 
+  name?: string;
+  departmentName?: string;
+  resignationDate?: string;
+  role?: string;
+  ntlogin?: string;
+  username?: string;
+  id?: number;
+  employee?: Employee;
+  userId?: number;
 }
 
 interface DepartmentData {
   [key: string]: { total: number; completed: number };
 }
 
-export const EmployeeDashboard: React.FC = () => {
+ const EmployeeDashboard = () => {
   const { user } = useAuth();
   const [clearanceItems, setClearanceItems] = useState<ClearanceItem[]>([]);
   const [employeeData, setEmployeeData] = useState<Employee | null>(null);
 
   useEffect(() => {
-    if (user?.employeeId) {
+    if (user?.employeeId) { 
       loadClearanceItems();
       loadEmployeeData();
     }
@@ -88,9 +97,7 @@ export const EmployeeDashboard: React.FC = () => {
   }
 
   return (
-    <DashboardLayout title="My Clearance Progress">
       <div className="space-y-6">
-        {/* Employee Info Card */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
@@ -278,6 +285,6 @@ export const EmployeeDashboard: React.FC = () => {
           </CardContent>
         </Card>
       </div>
-    </DashboardLayout>
   );
 };
+export default EmployeeDashboard;

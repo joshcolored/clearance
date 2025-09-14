@@ -43,6 +43,7 @@ export const DashboardLayout: React.FC = () => {
               <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-300">
                 <User className="h-4 w-4" />
                 <span>{user.name}</span>
+
               </div>
               <Button variant="outline" size="sm" onClick={logout}>
                 <LogOut className="h-4 w-4 mr-2" />

@@ -53,7 +53,6 @@ import { Employee, ClearanceItem } from "@/types";
 import { CustomPieChart } from "@/components/Charts/PieChart";
 import { CustomBarChart } from "@/components/Charts/BarChart";
 import { Textarea } from "../ui/textarea";
-import  DashboardLayout  from "../Layout/DashboardLayout";
 
 interface DepartmentData {
   name: string;
@@ -62,7 +61,7 @@ interface DepartmentData {
   total: number;
 }
 
-export const HRDashboard: React.FC = () => {
+const HRDashboard = () => {
   const [selectedTask, setSelectedTask] = useState<ClearanceItem | null>(null);
   const [signature, setSignature] = useState("");
   const [remarks, setRemarks] = useState("");

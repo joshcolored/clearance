@@ -12,9 +12,9 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 
 const Dashboard: React.FC = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { user } = useAuth();
 
-  if (!isAuthenticated || !user) {
+  if (!user) {
     return <Navigate to="/" replace />;
   }
 
