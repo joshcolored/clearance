@@ -24,23 +24,23 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 const roleToPath = (role: string) => {
   switch (role) {
-    case "super_admin":
+    case '9':
       return "/admin";
-    case "hr":
+    case '1':
       return "/hr";
-    case "it":
+    case '3':
       return "/it";
-    case "team_leader":
+    case '4':
       return "/team-leader";
-    case "engineering_auxiliary":
+    case '5':
       return "/engineering";
-    case "admin_facilities":
+    case '6':
       return "/facilities";
-    case "account_coordinator":
+    case '7':
       return "/account";
-    case "operations_manager":
+    case '8':
       return "/operations";
-    case "employee":
+    case '2':
       return "/employee";
     default:
       return "/";
