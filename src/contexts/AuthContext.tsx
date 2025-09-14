@@ -22,25 +22,25 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
-const roleToPath = (role: number) => {
+const roleToPath = (role: string) => {
   switch (role) {
-    case 9:
+    case '9':
       return "/admin";
-    case 1:
+    case '1':
       return "/hr";
-    case 3:
+    case '3':
       return "/it";
-    case 4:
+    case '4':
       return "/team-leader";
-    case 5:
+    case '5':
       return "/engineering";
-    case 6:
+    case '6':
       return "/facilities";
-    case 7:
+    case '7':
       return "/account";
-    case 8:
+    case '8':
       return "/operations";
-    case 2:
+    case '2':
       return "/employee";
     default:
       return "/";
