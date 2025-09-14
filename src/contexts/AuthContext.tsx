@@ -7,7 +7,7 @@ type User = {
   name: string;
   username?: string | null;
   ntlogin?: string | null;
-  role: string;
+  role: number;
 };
 
 type AuthContextType = {
