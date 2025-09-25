@@ -31,7 +31,7 @@ const Dashboard: React.FC = () => {
       return <EngineeringDashboard />;
     case 'admin_facilities':
       return <FacilitiesDashboard />;
-    case 'account_coordinator':
+    case 'account':
       return <AccountCoordinatorDashboard />;
     case 'operations_manager':
       return <OperationsManagerDashboard />;

@@ -8,13 +8,13 @@ import { Outlet } from 'react-router-dom';
 
 const roleLabels: Record<string, string> = {
   super_admin: 'Super Administrator',
-  hr: 'HR Manager',
-  it: 'IT Manager',
-  team_leader: 'Team Leader',
-  engineering_auxiliary: 'Engineering & Auxiliary',
-  admin_facilities: 'Admin/Facilities',
-  account_coordinator: 'Account Coordinator',
-  operations_manager: 'Operations Manager',
+  hr: 'HR',
+  it: 'IT',
+  team_leader: 'TL',
+  engineering_auxiliary: 'Eng & Aux',
+  admin_facilities: 'Admin/Fac',
+  account_coordinator: 'Acct Coord',
+  operations_manager: 'Ops Mgr',
   employee: 'Employee'
 };
 
@@ -34,7 +34,25 @@ export const DashboardLayout: React.FC = () => {
                 Clearance Admin Tracker
               </h1>
               <Badge variant="secondary">
-                {roleLabels[user.role] || user.role}
+                {user.role === "1"
+                  ? "HR"
+                  : user.role === "2"
+                  ? "IT"
+                  : user.role === "3"
+                  ? "TL"
+                  : user.role === "4"
+                  ? "Eng & Aux"
+                  : user.role === "5"
+                  ? "Admin/Fac"
+                  : user.role === "6"
+                  ? "Acct Coord"
+                  : user.role === "7"
+                  ? "Ops Mgr"
+                  : user.role === "8"
+                  ? "Super Admin"
+                  : user.role === "9"
+                  ? "Employee"
+                  : user.role}
               </Badge>
             </div>
 

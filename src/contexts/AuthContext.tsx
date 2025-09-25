@@ -24,24 +24,25 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 const roleToPath = (role: string) => {
   switch (role) {
-    case '9':
-      return "/admin";
     case '1':
       return "/hr";
-    case '3':
-      return "/it";
-    case '4':
-      return "/team-leader";
-    case '5':
-      return "/engineering";
-    case '6':
-      return "/facilities";
-    case '7':
-      return "/account";
-    case '8':
-      return "/operations";
     case '2':
+      return "/it";
+    case '3':
+      return "/team-leader";
+    case '4':
+      return "/engineering";
+    case '5':
+      return "/facilities";
+    case '6':
+      return "/accounting";
+    case '7':
+      return "/operations";
+    case '8':
+      return "/admin";
+    case '9':
       return "/employee";
+
     default:
       return "/";
   }
@@ -71,9 +72,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       },
       body: JSON.stringify({ identifier, password }),
     });
-
-    localStorage.setItem("loginData", JSON.stringify({ identifier, password }));
-
+    
     if (!res.ok) {
       const err = await res
         .json()
