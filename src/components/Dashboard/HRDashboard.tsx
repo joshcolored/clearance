@@ -37,10 +37,11 @@ interface Employee {
   name: string;
   employeeId: string;
   ntlogin: string;
+  temporary_password?: string;
   department: string;
   resignationDate: string;
   status: string;
-  clearance_items: ClearanceItem[]; // ✅ updated to match backend
+  clearance_items: ClearanceItem[];
 }
 
 interface ClearanceItem {
@@ -103,6 +104,17 @@ const HRDashboard: React.FC = () => {
     { name: "Pending", value: clearanceStats.pending },
   ];
 
+  // 🔹 Password generator helper
+  const generateTempPassword = (length = 8) => {
+    const chars =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let password = "";
+    for (let i = 0; i < length; i++) {
+      password += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return password;
+  };
+
   // 🔹 Load employees from backend
   const loadEmployees = async () => {
     try {
@@ -120,6 +132,7 @@ const HRDashboard: React.FC = () => {
 
     try {
       const res = await axios.post(`${API_URL}/employees`, newEmployee);
+      // console.log(res.data);
       setEmployees([...employees, res.data]);
       setIsAddDialogOpen(false);
       setNewEmployee({});
@@ -167,11 +180,10 @@ const HRDashboard: React.FC = () => {
         {
           signature,
           remarks,
-          completedBy: "HR Manager", // Or logged-in role
+          completedBy: "HR Manager",
         }
       );
 
-      // 🔹 Update employees state
       setEmployees((prev) =>
         prev.map((emp) =>
           emp.id === selectedEmployee?.id
@@ -196,7 +208,6 @@ const HRDashboard: React.FC = () => {
           : prev
       );
 
-      // 🔹 Check if all tasks are complete → update employee status
       const updatedTasks = selectedEmployee?.clearance_items.map((item) =>
         item.id === res.data.id ? res.data : item
       );
@@ -219,7 +230,6 @@ const HRDashboard: React.FC = () => {
         );
       }
 
-      // reset + close
       setSelectedTask(null);
       setSignature("");
       setRemarks("");
@@ -340,7 +350,7 @@ const HRDashboard: React.FC = () => {
                     <Button
                       onClick={() => {
                         setSelectedEmployee(emp);
-                        setSelectedTask(null); // ✅ reset selectedTask when opening dialog
+                        setSelectedTask(null);
                         setIsTaskDialogOpen(true);
                       }}
                     >
@@ -432,9 +442,17 @@ const HRDashboard: React.FC = () => {
             <Label>NT Login</Label>
             <Input
               value={newEmployee.ntlogin || ""}
-              onChange={(e) =>
-                setNewEmployee({ ...newEmployee, ntlogin: e.target.value })
-              }
+              onChange={(e) => {
+                const ntlogin = e.target.value;
+                setNewEmployee({
+                  ...newEmployee,
+                  ntlogin,
+                  temporary_password:
+                    ntlogin && !newEmployee.temporary_password
+                      ? generateTempPassword()
+                      : newEmployee.temporary_password,
+                });
+              }}
             />
             <Label>Department</Label>
             <Input
@@ -442,6 +460,11 @@ const HRDashboard: React.FC = () => {
               onChange={(e) =>
                 setNewEmployee({ ...newEmployee, department: e.target.value })
               }
+            />
+            <Label>Temporary Password</Label>
+            <Input
+              value={newEmployee.temporary_password || ""}
+              readOnly 
             />
             <Label>Resignation Date</Label>
             <Input
@@ -584,7 +607,7 @@ const HRDashboard: React.FC = () => {
                 className="mt-3"
                 onClick={async () => {
                   await completeTask();
-                  setIsCompleteDialogOpen(false); // close after submit
+                  setIsCompleteDialogOpen(false);
                 }}
               >
                 Submit
