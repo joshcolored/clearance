@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef  } from "react";
 import axios from "axios";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -59,11 +59,13 @@ interface ClearanceItem {
 const HRDashboard: React.FC = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [newEmployee, setNewEmployee] = useState<Partial<Employee>>({});
+  const [suggestions, setSuggestions] = useState<Employee[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
     null
   );
   const [selectedTask, setSelectedTask] = useState<ClearanceItem | null>(null);
-
+  const isSelecting = useRef(false);
   const [isCompleteDialogOpen, setIsCompleteDialogOpen] = useState(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -76,6 +78,7 @@ const HRDashboard: React.FC = () => {
   const [employeeToDelete, setEmployeeToDelete] = useState<Employee | null>(
     null
   );
+  
 
   // 🔹 Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -113,6 +116,54 @@ const HRDashboard: React.FC = () => {
       password += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     return password;
+  };
+
+    const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const ntlogin = e.target.value;
+    setNewEmployee({
+      ...newEmployee,
+      ntlogin,
+      temporary_password:
+        ntlogin && !newEmployee.temporary_password
+          ? generateTempPassword()
+          : newEmployee.temporary_password,
+    });
+   if (isSelecting.current) {
+        isSelecting.current = false;
+        setSuggestions([]);
+       setShowSuggestions(false);
+       console.log(showSuggestions);
+        return;
+      }
+    if (ntlogin.length > 2) {
+
+      try {
+        const res = await axios.post(`${API_URL}/employees/getUsers`, { ntlogin });
+        setSuggestions(res.data.message);
+        // console.log(res);
+        setShowSuggestions(true);
+      } catch (err) {
+        console.error("Error fetching users:", err);
+      }
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+    
+
+  }; 
+   const handleSelectUser = (user: Employee) => {
+    isSelecting.current = true;
+      setShowSuggestions(false);
+    setNewEmployee({
+      ...newEmployee,
+      employeeId: user.employeeId,
+      name: user.name,
+      ntlogin: user.ntlogin,
+      department: user.department
+    });
+    console.log(showSuggestions);
+ 
   };
 
   // 🔹 Load employees from backend
@@ -442,18 +493,24 @@ const HRDashboard: React.FC = () => {
             <Label>NT Login</Label>
             <Input
               value={newEmployee.ntlogin || ""}
-              onChange={(e) => {
-                const ntlogin = e.target.value;
-                setNewEmployee({
-                  ...newEmployee,
-                  ntlogin,
-                  temporary_password:
-                    ntlogin && !newEmployee.temporary_password
-                      ? generateTempPassword()
-                      : newEmployee.temporary_password,
-                });
-              }}
+              onChange={handleInputChange}
             />
+
+              {showSuggestions && suggestions.length > 0 && (
+              <ul className="absolute bg-white border rounded shadow w-full mt-1 max-h-48 overflow-y-auto z-10">
+                {suggestions.map((user) => (
+                  <li
+                    key={user.id}
+                    onClick={() => handleSelectUser(user)}
+                    className="p-2 hover:bg-gray-100 cursor-pointer"
+                  >
+                    {user.name} - {user.ntlogin} - {user.employeeId}
+                  </li>
+                ))}
+              </ul>
+            )}
+
+      
             <Label>Department</Label>
             <Input
               value={newEmployee.department || ""}
