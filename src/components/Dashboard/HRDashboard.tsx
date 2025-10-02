@@ -65,7 +65,7 @@ const HRDashboard: React.FC = () => {
     null
   );
   const [selectedTask, setSelectedTask] = useState<ClearanceItem | null>(null);
-  const isSelecting = useRef(false);
+  const isSelecting = useRef(true);
   const [isCompleteDialogOpen, setIsCompleteDialogOpen] = useState(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -119,12 +119,13 @@ const HRDashboard: React.FC = () => {
   };
 
     const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const ntlogin = e.target.value;
+    const employeeId = e.target.value;
+    console.log(employeeId);
     setNewEmployee({
       ...newEmployee,
-      ntlogin,
+      employeeId,
       temporary_password:
-        ntlogin && !newEmployee.temporary_password
+        employeeId && !newEmployee.temporary_password
           ? generateTempPassword()
           : newEmployee.temporary_password,
     });
@@ -135,10 +136,10 @@ const HRDashboard: React.FC = () => {
        console.log(showSuggestions);
         return;
       }
-    if (ntlogin.length > 2) {
+    if (employeeId.length > 2) {
 
       try {
-        const res = await axios.post(`${API_URL}/employees/getUsers`, { ntlogin });
+        const res = await axios.post(`${API_URL}/employees/getUsers`, { employeeId });
         setSuggestions(res.data.message);
         // console.log(res);
         setShowSuggestions(true);
@@ -486,29 +487,29 @@ const HRDashboard: React.FC = () => {
             <Label>Employee ID</Label>
             <Input
               value={newEmployee.employeeId || ""}
-              onChange={(e) =>
-                setNewEmployee({ ...newEmployee, employeeId: e.target.value })
-              }
+              onChange={handleInputChange}
             />
+              {showSuggestions && suggestions.length > 0 && (
+                        <ul className="absolute bg-white border rounded shadow w-full mt-1 max-h-48 overflow-y-auto z-10">
+                          {suggestions.map((user) => (
+                            <li
+                              key={user.id}
+                              onClick={() => handleSelectUser(user)}
+                              className="p-2 hover:bg-gray-100 cursor-pointer"
+                            >
+                              {user.name} - {user.ntlogin} - {user.employeeId}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+
             <Label>NT Login</Label>
             <Input
               value={newEmployee.ntlogin || ""}
-              onChange={handleInputChange}
+             
             />
 
-              {showSuggestions && suggestions.length > 0 && (
-              <ul className="absolute bg-white border rounded shadow w-full mt-1 max-h-48 overflow-y-auto z-10">
-                {suggestions.map((user) => (
-                  <li
-                    key={user.id}
-                    onClick={() => handleSelectUser(user)}
-                    className="p-2 hover:bg-gray-100 cursor-pointer"
-                  >
-                    {user.name} - {user.ntlogin} - {user.employeeId}
-                  </li>
-                ))}
-              </ul>
-            )}
+          
 
       
             <Label>Department</Label>
